@@ -21,4 +21,4 @@ streamlit run app/streamlit_app.py
 ```
 
 ## Data:
-I'm using files from this open source library database: https://openlibrary.org/
+I'm using files from this open source library database: https://openlibrary.org/developers/dumps. Choose your desired data dump and start testing!
