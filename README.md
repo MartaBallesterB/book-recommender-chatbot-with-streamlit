@@ -20,3 +20,5 @@ uv sync
 streamlit run app/streamlit_app.py
 ```
 
+## Data:
+I'm using files from this open source library database: https://openlibrary.org/
