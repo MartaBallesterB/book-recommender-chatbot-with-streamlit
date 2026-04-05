@@ -22,3 +22,8 @@ streamlit run app/streamlit_app.py
 
 ## Data:
 I'm using files from this open source library database: https://openlibrary.org/developers/dumps. Choose your desired data dump and start testing!
+
+## General chart and random ideas:
+
+<img width="2872" height="1392" alt="image" src="https://github.com/user-attachments/assets/792b9a85-4bb2-472a-885e-ca3970f0b839" />
+
