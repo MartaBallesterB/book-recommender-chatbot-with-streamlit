@@ -6,12 +6,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from src.embeddings import BookEmbedder
 
-# ── Switch between "tfidf" and "embeddings" ──────────────────────────────────
-# MODE = "tfidf"
-MODE = "embeddings"
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 def json_dict_to_str(raw):
     """ Function to parse a JSON dict to returns its values as a comma-separated string."""
     try:
@@ -20,7 +14,7 @@ def json_dict_to_str(raw):
         return "" # empty string for nan's and invalid formats
 
 
-def load_books_dataset():
+def load_books_dataset() -> pd.DataFrame:
     path = kagglehub.dataset_download("ymaricar/cmu-book-summary-dataset")
     df = pd.read_csv(
         f"{path}/booksummaries.txt",
@@ -39,24 +33,30 @@ def load_books_dataset():
     return df
 
 
-books = load_books_dataset()
-
-if MODE == "embeddings":
-    embedder = BookEmbedder()
-    book_vectors = embedder.encode_books(books["combined"].tolist(), cache_path="data/book_vectors.npy")
-else:
+def build_tfidf(books: pd.DataFrame):
+    """Builds and returns a fitted TF-IDF vectorizer and book vectors."""
     vectorizer = TfidfVectorizer(stop_words="english")
     book_vectors = vectorizer.fit_transform(books["combined"])
+    return vectorizer, book_vectors
 
 
-def top_N_book_recommender(query: str, top_N: int) -> pd.DataFrame:
-    if MODE == "embeddings":
-        indices, _ = embedder.get_top_n(query, book_vectors, n=top_N)
-        return books.iloc[indices][["title", "author", "genres"]].reset_index(drop=True)
-    else:
-        query_vec = vectorizer.transform([query])
-        similarity = cosine_similarity(query_vec, book_vectors)
-        top_indices = similarity.argsort()[0][-top_N:][::-1]
-        return books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
-    
-    # repensar para tfidf option!: how to setup a threshold to avoid same recos for queries veeeery specific where there are nearly no recos at all.
+def build_embeddings(books: pd.DataFrame, model_name: str):
+    """Builds and returns a BookEmbedder and book vectors (cached per model)."""
+    cache_path = f"data/book_vectors_{model_name.replace('/', '_')}.npy"
+    embedder = BookEmbedder(model_name)
+    book_vectors = embedder.encode_books(books["combined"].tolist(), cache_path=cache_path)
+    return embedder, book_vectors
+
+
+def recommend_tfidf(query: str, top_N: int, books: pd.DataFrame, vectorizer, book_vectors) -> pd.DataFrame:
+    """Returns top N book recommendations using TF-IDF cosine similarity."""
+    query_vec = vectorizer.transform([query])
+    scores = cosine_similarity(query_vec, book_vectors).flatten()
+    top_indices = scores.argsort()[-top_N:][::-1]
+    return books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
+
+
+def recommend_embeddings(query: str, top_N: int, books: pd.DataFrame, embedder: BookEmbedder, book_vectors) -> pd.DataFrame:
+    """Returns top N book recommendations using sentence embeddings cosine similarity."""
+    indices, _ = embedder.get_top_n(query, book_vectors, n=top_N)
+    return books.iloc[indices][["title", "author", "genres"]].reset_index(drop=True)
