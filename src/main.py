@@ -4,6 +4,13 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from src.embeddings import BookEmbedder
+
+# ── Switch between "tfidf" and "embeddings" ──────────────────────────────────
+# MODE = "tfidf"
+MODE = "embeddings"
+# ─────────────────────────────────────────────────────────────────────────────
+
 
 def json_dict_to_str(raw):
     """ Function to parse a JSON dict to returns its values as a comma-separated string."""
@@ -34,20 +41,22 @@ def load_books_dataset():
 
 books = load_books_dataset()
 
-vectorizer = TfidfVectorizer(stop_words="english")
-book_vectors = vectorizer.fit_transform(books["combined"]) # book_vector ready to use!!
+if MODE == "embeddings":
+    embedder = BookEmbedder()
+    book_vectors = embedder.encode_books(books["combined"].tolist(), cache_path="data/book_vectors.npy")
+else:
+    vectorizer = TfidfVectorizer(stop_words="english")
+    book_vectors = vectorizer.fit_transform(books["combined"])
 
 
 def top_N_book_recommender(query: str, top_N: int) -> pd.DataFrame:
-    query_vec = vectorizer.transform([query]) # query_vector ready to use too!
-    similarity = cosine_similarity(query_vec, book_vectors)
-    top_indices = similarity.argsort()[0][-top_N:][::-1]
-    return books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
-
-# repensar!: how to setup a threshold to avoid same recos for queries veeeery specific where there are nearly no recos at all.
-
-# maybe hace falta indexar pero no se si quiero no-recos a que pinte las mismas 5 todo el rato.
-# fallback por palabras clave? separar la query en palabras clave sueltas y probar cada una por separado?
-# rollo "libro histórico del S.XX" → falla la query completa → prueba "histórico" → prueba "S.XX" → devuelve lo primero que funcione
-
-# repensar 2!: embeddings para palabras clave combinadas! TFIDF limita bastant
+    if MODE == "embeddings":
+        indices, _ = embedder.get_top_n(query, book_vectors, n=top_N)
+        return books.iloc[indices][["title", "author", "genres"]].reset_index(drop=True)
+    else:
+        query_vec = vectorizer.transform([query])
+        similarity = cosine_similarity(query_vec, book_vectors)
+        top_indices = similarity.argsort()[0][-top_N:][::-1]
+        return books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
+    
+    # repensar para tfidf option!: how to setup a threshold to avoid same recos for queries veeeery specific where there are nearly no recos at all.
