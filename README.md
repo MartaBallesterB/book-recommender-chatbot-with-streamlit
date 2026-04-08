@@ -4,6 +4,8 @@
 
 This project uses the [CMU Book Summary Dataset](https://www.kaggle.com/datasets/ymaricar/cmu-book-summary-dataset) (~16,000 books with plot summaries from Wikipedia, titles, authors, and genres). It was chosen to avoid loading a massive dataset while still having enough variety for meaningful recommendations.
 
+Dataset license: [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
+
 ## ⚙ Environment Setup
 
 ### Clone the repository and access it:
