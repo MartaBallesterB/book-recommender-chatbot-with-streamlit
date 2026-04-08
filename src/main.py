@@ -43,3 +43,9 @@ def top_N_book_recommender(query: str, top_N: int) -> pd.DataFrame:
     similarity = cosine_similarity(query_vec, book_vectors)
     top_indices = similarity.argsort()[0][-top_N:][::-1]
     return books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
+
+# repensar!: how to setup a threshold to avoid same recos for queries veeeery specific where there are nearly no recos at all.
+
+# maybe hace falta indexar pero no se si quiero no-recos a que pinte las mismas 5 todo el rato.
+# fallback por palabras clave? separar la query en palabras clave sueltas y probar cada una por separado?
+# rollo "libro histórico del S.XX" → falla la query completa → prueba "histórico" → prueba "S.XX" → devuelve lo primero que funcione
