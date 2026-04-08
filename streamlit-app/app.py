@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import streamlit as st
 from src.main import top_N_book_recommender
 
-st.title("Book Recommender Chatbot, a su servicio 📚🤖")
+st.title("Welcome to my Book Recommender! 📚🤖")
 
 top_N = 5
 
@@ -25,7 +25,7 @@ if query := st.chat_input("What kind of story are you looking for?"):
 
     results = top_N_book_recommender(query, top_N)
 
-    response = "Here are my top  recommendations:\n\n"
+    response = f"Here are my top {top_N} recommendations:\n\n"
     for i, row in results.iterrows():
         response += f"**{i + 1}. {row['title']}** by {row['author']}\n"
         if row["genres"]:

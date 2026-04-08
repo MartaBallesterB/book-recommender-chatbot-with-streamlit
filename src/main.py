@@ -49,3 +49,5 @@ def top_N_book_recommender(query: str, top_N: int) -> pd.DataFrame:
 # maybe hace falta indexar pero no se si quiero no-recos a que pinte las mismas 5 todo el rato.
 # fallback por palabras clave? separar la query en palabras clave sueltas y probar cada una por separado?
 # rollo "libro histórico del S.XX" → falla la query completa → prueba "histórico" → prueba "S.XX" → devuelve lo primero que funcione
+
+# repensar 2!: embeddings para palabras clave combinadas! TFIDF limita bastant
