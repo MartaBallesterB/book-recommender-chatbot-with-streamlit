@@ -72,6 +72,8 @@ if query := st.chat_input("What kind of story are you looking for?"):
             response += f"**{i + 1}. {row['title']}** by {row['author']}\n"
             if row["genres"]:
                 response += f"_{row['genres']}_\n"
+            if "score" in results.columns:
+                response += f"Similarity score: {row['score']}\n"
             response += "\n"
 
     st.session_state.messages.append({"role": "assistant", "content": response})

@@ -1,6 +1,8 @@
 import json
 import kagglehub
 import pandas as pd
+import re
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -13,6 +15,11 @@ def json_dict_to_str(raw):
     except Exception:
         return "" # empty string for nan's and invalid formats
 
+def preprocess(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9\s]", " ", text)  # elimina puntuación
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
 def load_books_dataset() -> pd.DataFrame:
     path = kagglehub.dataset_download("ymaricar/cmu-book-summary-dataset")
@@ -30,12 +37,18 @@ def load_books_dataset() -> pd.DataFrame:
     # convert nan to 'Unknown'
     df["author"] = df["author"].fillna("Unknown")
     df["combined"] = df["genres"] + " " + df["summary"]
+    df["combined"] = df["combined"].apply(preprocess)
     return df
-
 
 def build_tfidf(books: pd.DataFrame):
     """Builds and returns a fitted TF-IDF vectorizer and book vectors."""
-    vectorizer = TfidfVectorizer(stop_words="english")
+    vectorizer = TfidfVectorizer(
+        stop_words="english",
+        ngram_range=(1, 2),
+        min_df=2, #ignorar terminos que estan en <2 libros (reducir ruido)
+        max_df=0.85, #ignorar terminos en >85% libros (muuy comunes)
+        sublinear_tf=True, #usar log(1+tf) para reducir impacto de palabras super frecuentes
+    )
     book_vectors = vectorizer.fit_transform(books["combined"])
     return vectorizer, book_vectors
 
@@ -53,10 +66,13 @@ def recommend_tfidf(query: str, top_N: int, books: pd.DataFrame, vectorizer, boo
     query_vec = vectorizer.transform([query])
     scores = cosine_similarity(query_vec, book_vectors).flatten()
     top_indices = scores.argsort()[-top_N:][::-1]
-    return books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
-
+    result = books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
+    result["score"] = scores[top_indices].round(3)
+    # debug
+    return result
 
 def recommend_embeddings(query: str, top_N: int, books: pd.DataFrame, embedder: BookEmbedder, book_vectors) -> pd.DataFrame:
     """Returns top N book recommendations using sentence embeddings cosine similarity."""
     indices, _ = embedder.get_top_n(query, book_vectors, n=top_N)
-    return books.iloc[indices][["title", "author", "genres"]].reset_index(drop=True)
+    result = books.iloc[indices][["title", "author", "genres"]].reset_index(drop=True)
+    return result       
