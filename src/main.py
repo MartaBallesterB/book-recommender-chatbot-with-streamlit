@@ -63,7 +63,7 @@ def build_embeddings(books: pd.DataFrame, model_name: str):
 
 def recommend_tfidf(query: str, top_N: int, books: pd.DataFrame, vectorizer, book_vectors) -> pd.DataFrame:
     """Returns top N book recommendations using TF-IDF cosine similarity."""
-    query_vec = vectorizer.transform([query])
+    query_vec = vectorizer.transform([preprocess(query)])
     scores = cosine_similarity(query_vec, book_vectors).flatten()
     top_indices = scores.argsort()[-top_N:][::-1]
     result = books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
