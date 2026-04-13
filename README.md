@@ -38,11 +38,12 @@ uv run streamlit run streamlit-app/app.py
 
 I want to use different approaches to recommend books and I will create different versions to compare them. 
 
-- **V1** — TF-IDF + cosine similarity. 'Bag-of-words' approach: computes a book_vector (from dataset) and a query_vector (user input) and rank it by cosine similarity. Issues I saw: can't handle multiple key words in one (example: "fantasy and war"). But it is really fast. General chart:
+- **V1** — TF-IDF + cosine similarity. 'Bag-of-words' approach: computes a book_vector (from dataset) and a query_vector (user input) and rank it by cosine similarity. Issues I saw: can't handle multiple key words in one (example: "fantasy and war"). But it is really fast. I created as well a notebook to have a general view of the distributions and how the recommendations behave with this approach. General chart:
 
-    <img width="100%" alt="image" src="https://github.com/user-attachments/assets/974054f8-11ff-453d-a923-8f9e2398ddb2" />
+    <img width="100%" alt="image" src="https://github.com/user-attachments/assets/55c9f711-d117-4ad5-a370-57444470e7ba" />
 
-- **V2** — Using `sentence-transformers`. Models encode
-  semantic meaning, so similar concepts rank together even without exact word matches. `book_vector` is cached to disk to avoid recomputing on every startup. Models I used to test: `all-MiniLM-L6-v2`, `BAAI/bge-large-en-v1.5`, `nomic-ai/nomic-embed-text-v1`. The models are also cached using `@st.cache_resource` (streamlit), so you can switch instantly the models in the UI after the first load. 
+- **V2** — Using `sentence-transformers`. Models encode semantic meaning, so similar concepts rank together even without exact word matches. `book_vector` is cached to disk to avoid recomputing on every startup. Model I used to test: `all-MiniLM-L6-v2`. 
 
-- **V4** *(in progress)* — Model evaluation notebook: comparing V1 and V2 approaches across models using a set of test queries and similarity metrics.
+  <img width="100%" alt="image" src="https://github.com/user-attachments/assets/c3843bcf-c420-4544-8e02-1979d9b52e4b" />
+
+- **V3** *(in progress)* — RAG + evaluation
