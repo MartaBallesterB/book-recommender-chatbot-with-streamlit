@@ -4,7 +4,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import streamlit as st
 from src.main import load_books_dataset, build_tfidf, build_embeddings, recommend_tfidf, recommend_embeddings
-from src.embeddings import AVAILABLE_MODELS
 
 
 # ── Cached setup functions (run once per session) ────────────────────────────
@@ -20,9 +19,9 @@ def get_tfidf_setup():
     return vectorizer, book_vectors
 
 @st.cache_resource
-def get_embeddings_setup(model_name: str):
+def get_embeddings_setup():
     books = get_books()
-    embedder, book_vectors = build_embeddings(books, model_name)
+    embedder, book_vectors = build_embeddings(books)
     return embedder, book_vectors
 
 
@@ -30,10 +29,6 @@ def get_embeddings_setup(model_name: str):
 st.sidebar.title("Recommender settings")
 
 mode = st.sidebar.radio("Mode", ["TF-IDF", "Embeddings"])
-
-model_name = None
-if mode == "Embeddings":
-    model_name = st.sidebar.selectbox("Model", AVAILABLE_MODELS)
 
 top_N = st.sidebar.slider("Number of recommendations", min_value=1, max_value=10, value=5)
 
@@ -58,7 +53,7 @@ if query := st.chat_input("What kind of story are you looking for?"):
     books = get_books()
 
     if mode == "Embeddings":
-        embedder, book_vectors = get_embeddings_setup(model_name)
+        embedder, book_vectors = get_embeddings_setup()
         results = recommend_embeddings(query, top_N, books, embedder, book_vectors)
     else:
         vectorizer, book_vectors = get_tfidf_setup()
@@ -70,7 +65,7 @@ if query := st.chat_input("What kind of story are you looking for?"):
         with st.chat_message("assistant"):
             st.write(response)
     else:
-        header = f"Here are my top {len(results)} recommendations for you *(mode: {mode}{f' · {model_name}' if model_name else ''})*:"
+        header = f"Here are my top {len(results)} recommendations for you *(mode: {mode})*:"
         st.session_state.messages.append({"role": "assistant", "content": header})
         with st.chat_message("assistant"):
             st.write(header)

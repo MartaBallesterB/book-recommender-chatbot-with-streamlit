@@ -3,23 +3,12 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-AVAILABLE_MODELS = ["all-MiniLM-L6-v2", "BAAI/bge-large-en-v1.5","nomic-ai/nomic-embed-text-v1"]
-
-QUERY_PREFIXES = {
-    "BAAI/bge-large-en-v1.5": "Represent this sentence for searching relevant passages: ",
-}
-
-TRUST_REMOTE_CODE = {
-    "nomic-ai/nomic-embed-text-v1",
-}
+MODEL_NAME = "all-MiniLM-L6-v2"
 
 
 class BookEmbedder:
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
-        self.model_name = model_name
-        trust = model_name in TRUST_REMOTE_CODE
-        self.model = SentenceTransformer(model_name, trust_remote_code=trust)
-        self.query_prefix = QUERY_PREFIXES.get(model_name, "")
+    def __init__(self):
+        self.model = SentenceTransformer(MODEL_NAME)
 
     def encode_books(self, texts: list[str], cache_path: str = None) -> np.ndarray:
         """
@@ -39,8 +28,8 @@ class BookEmbedder:
         return self.model.encode(texts, show_progress_bar=True, convert_to_numpy=True)
 
     def encode_query(self, query: str) -> np.ndarray:
-        """Encodes a single query string into an embedding vector, applying model-specific prefixes if needed."""
-        return self.model.encode([self.query_prefix + query], convert_to_numpy=True)
+        """Encodes a single query string into an embedding vector."""
+        return self.model.encode([query], convert_to_numpy=True)
 
     def get_top_n(self, query: str, book_vectors: np.ndarray, n: int = 5, min_score: float = 0.1) -> tuple[list[int], list[float]]:
         """

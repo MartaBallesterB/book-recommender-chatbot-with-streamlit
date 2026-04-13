@@ -53,11 +53,10 @@ def build_tfidf(books: pd.DataFrame):
     return vectorizer, book_vectors
 
 
-def build_embeddings(books: pd.DataFrame, model_name: str):
-    """Builds and returns a BookEmbedder and book vectors (cached per model)."""
-    cache_path = f"data/book_vectors_{model_name.replace('/', '_')}.npy"
-    embedder = BookEmbedder(model_name)
-    book_vectors = embedder.encode_books(books["combined"].tolist(), cache_path=cache_path)
+def build_embeddings(books: pd.DataFrame):
+    """Builds and returns a BookEmbedder and book vectors (cached to disk)."""
+    embedder = BookEmbedder()
+    book_vectors = embedder.encode_books(books["combined"].tolist(), cache_path="data/book_vectors.npy")
     return embedder, book_vectors
 
 
