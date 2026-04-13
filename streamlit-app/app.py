@@ -66,16 +66,22 @@ if query := st.chat_input("What kind of story are you looking for?"):
 
     if results.empty:
         response = "I couldn't find any books matching your query. Try different keywords please!"
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        with st.chat_message("assistant"):
+            st.write(response)
     else:
-        response = f"Here are my top {len(results)} recommendations for you *(mode: {mode}{f' · {model_name}' if model_name else ''})*:\n\n"
-        for i, row in results.iterrows():
-            response += f"**{i + 1}. {row['title']}** by {row['author']}\n"
-            if row["genres"]:
-                response += f"_{row['genres']}_\n"
-            if "score" in results.columns:
-                response += f"Similarity score: {row['score']}\n"
-            response += "\n"
-
-    st.session_state.messages.append({"role": "assistant", "content": response})
-    with st.chat_message("assistant"):
-        st.write(response)
+        header = f"Here are my top {len(results)} recommendations for you *(mode: {mode}{f' · {model_name}' if model_name else ''})*:"
+        st.session_state.messages.append({"role": "assistant", "content": header})
+        with st.chat_message("assistant"):
+            st.write(header)
+            for i, row in results.iterrows():
+                title_line = f"**{i + 1}. {row['title']}** by {row['author']}"
+                if row["genres"]:
+                    title_line += f"  \n_{row['genres']}_"
+                if "score" in results.columns:
+                    title_line += f"  \nSimilarity score: {row['score']}"
+                st.markdown(title_line)
+                if row.get("summary"):
+                    snippet = row["summary"][:200].rsplit(" ", 1)[0] + "…"
+                    with st.expander("Summary"):
+                        st.write(snippet)
