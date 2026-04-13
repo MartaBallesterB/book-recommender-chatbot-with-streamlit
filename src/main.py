@@ -61,18 +61,23 @@ def build_embeddings(books: pd.DataFrame, model_name: str):
     return embedder, book_vectors
 
 
-def recommend_tfidf(query: str, top_N: int, books: pd.DataFrame, vectorizer, book_vectors) -> pd.DataFrame:
+def recommend_tfidf(query: str, top_N: int, books: pd.DataFrame, vectorizer, book_vectors, min_score=0.05) -> pd.DataFrame:
     """Returns top N book recommendations using TF-IDF cosine similarity."""
     query_vec = vectorizer.transform([preprocess(query)])
     scores = cosine_similarity(query_vec, book_vectors).flatten()
     top_indices = scores.argsort()[-top_N:][::-1]
+    top_indices = [i for i in top_indices if scores[i] >= min_score]  # filtro
+    if not top_indices:
+        return pd.DataFrame()
     result = books.iloc[top_indices][["title", "author", "genres"]].reset_index(drop=True)
     result["score"] = scores[top_indices].round(3)
-    # debug
     return result
 
 def recommend_embeddings(query: str, top_N: int, books: pd.DataFrame, embedder: BookEmbedder, book_vectors) -> pd.DataFrame:
     """Returns top N book recommendations using sentence embeddings cosine similarity."""
-    indices, _ = embedder.get_top_n(query, book_vectors, n=top_N)
+    indices, scores = embedder.get_top_n(query, book_vectors, n=top_N)
     result = books.iloc[indices][["title", "author", "genres"]].reset_index(drop=True)
-    return result       
+    result["score"] = [round(s, 3) for s in scores]
+    return result
+
+
