@@ -3,10 +3,10 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import streamlit as st
-from src.main import load_books_dataset, build_tfidf, build_embeddings, recommend_tfidf, recommend_embeddings
+from src.main import load_books_dataset, build_tfidf, build_embeddings, build_chroma, recommend_tfidf, recommend_embeddings, recommend_chroma
 
-
-# ── Cached setup functions (run once per session) ────────────────────────────
+from dotenv import load_dotenv
+load_dotenv() # loads HuggingFace token from .env
 
 @st.cache_resource
 def get_books():
@@ -24,14 +24,21 @@ def get_embeddings_setup():
     embedder, book_vectors = build_embeddings(books)
     return embedder, book_vectors
 
+# debuuuuug
+print("HF_TOKEN loaded:", bool(os.environ.get("HF_TOKEN")))
+
+@st.cache_resource
+def get_chroma_setup():
+    books = get_books()
+    hf_token = os.environ.get("HF_TOKEN", "")
+    return build_chroma(books, hf_token=hf_token)
 
 # Sidebar options:
 st.sidebar.title("Recommender settings")
 
-mode = st.sidebar.radio("Mode", ["TF-IDF", "Embeddings"])
+mode = st.sidebar.radio("Mode", ["TF-IDF", "Embeddings", "ChromaDB"])
 
 top_N = st.sidebar.slider("Number of recommendations", min_value=1, max_value=10, value=5)
-
 
 # Main UI:
 st.title("Welcome to my Book Recommender! 📚🤖")
@@ -55,6 +62,9 @@ if query := st.chat_input("What kind of story are you looking for?"):
     if mode == "Embeddings":
         embedder, book_vectors = get_embeddings_setup()
         results = recommend_embeddings(query, top_N, books, embedder, book_vectors)
+    elif mode == "ChromaDB":
+        store = get_chroma_setup()
+        results = recommend_chroma(query, top_N, store)
     else:
         vectorizer, book_vectors = get_tfidf_setup()
         results = recommend_tfidf(query, top_N, books, vectorizer, book_vectors)

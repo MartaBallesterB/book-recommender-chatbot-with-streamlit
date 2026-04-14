@@ -7,6 +7,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from src.embeddings import BookEmbedder
+from src.chroma import BookChromaStore
 
 def json_dict_to_str(raw):
     """ Function to parse a JSON dict to returns its values as a comma-separated string."""
@@ -80,5 +81,28 @@ def recommend_embeddings(query: str, top_N: int, books: pd.DataFrame, embedder: 
     result = books.iloc[indices][["title", "author", "genres", "summary"]].reset_index(drop=True)
     result["score"] = [round(s, 3) for s in scores]
     return result
+
+
+def build_chroma(books: pd.DataFrame, hf_token: str) -> BookChromaStore:
+    store = BookChromaStore(hf_token=hf_token)
+    if not store.is_indexed():
+        store.index_books(books)
+    return store
+
+
+def recommend_chroma(query: str, top_N: int, store: BookChromaStore) -> pd.DataFrame:
+    results = store.query(query, n=top_N)
+    if not results["metadatas"][0]:
+        return pd.DataFrame()
+    rows = []
+    for metadata, distance in zip(results["metadatas"][0], results["distances"][0]):
+        rows.append({
+            "title": metadata["title"],
+            "author": metadata["author"],
+            "genres": metadata["genres"],
+            "summary": metadata["summary"],
+            "score": round(1 - distance, 3),
+        })
+    return pd.DataFrame(rows)
 
 
