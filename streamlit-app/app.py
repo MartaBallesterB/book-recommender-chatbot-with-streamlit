@@ -36,7 +36,7 @@ def get_chroma_setup():
 # Sidebar options:
 st.sidebar.title("Recommender settings")
 
-mode = st.sidebar.radio("Mode", ["TF-IDF", "Embeddings", "ChromaDB"])
+mode = st.sidebar.radio("Mode", ["ChromaDB", "Embeddings", "TF-IDF"])
 
 top_N = st.sidebar.slider("Number of recommendations", min_value=1, max_value=10, value=5)
 

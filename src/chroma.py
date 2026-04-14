@@ -26,12 +26,14 @@ class BookChromaStore:
         self.collection = self.client.get_or_create_collection(
             name=collection_name,
             embedding_function=self.embedding_fn,
+            # cosine sim. over L2 distance because it matters most the meaning than the text length
+            metadata={"hnsw:space": "cosine"}
         )
 
     def is_indexed(self) -> bool:
         return self.collection.count() > 0
 
-    def index_books(self, books, batch_size: int = 100) -> None:
+    def index_books(self, books, batch_size: int = 200) -> None:
         """Indexes all books into ChromaDB"""
         total = len(books)
         print(f"Indexing {total} books into ChromaDB! Esto tarda un rato...")
