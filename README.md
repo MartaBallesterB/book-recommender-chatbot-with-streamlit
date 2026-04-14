@@ -42,8 +42,12 @@ I want to use different approaches to recommend books and I will create differen
 
     <img width="100%" alt="image" src="https://github.com/user-attachments/assets/55c9f711-d117-4ad5-a370-57444470e7ba" />
 
-- **V2** — Using `sentence-transformers`. Models encode semantic meaning, so similar concepts rank together even without exact word matches. `book_vector` is cached to disk to avoid recomputing on every startup. Model I used to test: `all-MiniLM-L6-v2`. 
+- **V2** — Using `sentence-transformers`. Models encode semantic meaning into a 384 dimensional vector, so similar concepts rank together even without exact word matches (example: *"wizards"* finds books about *"magic"*). `book_vector` is cached to disk once, to avoid recomputing on every startup. Model I used to test: `all-MiniLM-L6-v2`. Problems for this approach: sentence-transformers loads the model every time streamlit runs (around 90MB with *one* model). :_(
 
   <img width="100%" alt="image" src="https://github.com/user-attachments/assets/c3843bcf-c420-4544-8e02-1979d9b52e4b" />
 
-- **V3** *(in progress)* — RAG + evaluation
+- **V3** *(WIP)* — ChromaDB (vector store) + HuggingFace Inference API embeddings (removes model in RAM!). Replaces the local `sentence-transformers` model and `.npy` cache with a persistent ChromaDB collection. I'll use `BAAI/bge-small-en-v1.5` model as an example. With this approach, book_vectors are indexed once via HuggingFace Inference API.
+
+- **V4** *(next)* — LLM response generation??
+
+- **V5** *(next)* — RAG pipeline evaluation (RAGAS framework maybe)
