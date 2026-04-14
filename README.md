@@ -48,6 +48,8 @@ I want to use different approaches to recommend books and I will create differen
 
 - **V3** — ChromaDB + HuggingFace Inference API embeddings (fixes the RAM problem in V2!). Embeddings are being generated with the HuggingFace Inference API and stored in a ChromaDB collection on disk. Using the `BAAI/bge-small-en-v1.5` model. Book_vectors are indexed only once.
 
+    <img width="100%" alt="image" src="https://github.com/user-attachments/assets/8bdf61fd-499f-4364-9a80-9cc8d9f5b64f" />
+
 - **V4** *(WIP)* — LLM response generation and finish the chatbot in Streamlit.
 
 - **V5** *(next)* — RAG pipeline evaluation (RAGAS framework maybe)
