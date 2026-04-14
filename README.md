@@ -4,7 +4,7 @@
 
 This project uses the [CMU Book Summary Dataset](https://www.kaggle.com/datasets/ymaricar/cmu-book-summary-dataset) (~16,000 books with plot summaries from Wikipedia, titles, authors, and genres). It was chosen to avoid loading a massive dataset while still having enough variety for meaningful recommendations.
 
-Dataset license: [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
+Dataset license:      [![License: CC BY-SA 3.0](https://img.shields.io/badge/License-CC%20BY--SA%203.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/3.0/)
 
 ## ⚙ Environment Setup
 
@@ -48,6 +48,6 @@ I want to use different approaches to recommend books and I will create differen
 
 - **V3** *(WIP)* — ChromaDB (vector store) + HuggingFace Inference API embeddings (removes model in RAM!). Replaces the local `sentence-transformers` model and `.npy` cache with a persistent ChromaDB collection. I'll use `BAAI/bge-small-en-v1.5` model as an example. With this approach, book_vectors are indexed once via HuggingFace Inference API.
 
-- **V4** *(next)* — LLM response generation??
+- **V4** *(next)* — LLM response generation and finish the chatbot in Streamlit.
 
 - **V5** *(next)* — RAG pipeline evaluation (RAGAS framework maybe)
