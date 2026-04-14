@@ -24,9 +24,6 @@ def get_embeddings_setup():
     embedder, book_vectors = build_embeddings(books)
     return embedder, book_vectors
 
-# debuuuuug
-print("HF_TOKEN loaded:", bool(os.environ.get("HF_TOKEN")))
-
 @st.cache_resource
 def get_chroma_setup():
     books = get_books()
@@ -87,6 +84,6 @@ if query := st.chat_input("What kind of story are you looking for?"):
                     title_line += f"  \nSimilarity score: {row['score']}"
                 st.markdown(title_line)
                 if row.get("summary"):
-                    snippet = row["summary"][:200].rsplit(" ", 1)[0] + "…"
+                    snippet = row["summary"][:500].rsplit(" ", 1)[0] + "…"
                     with st.expander("Summary"):
                         st.write(snippet)
