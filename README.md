@@ -46,8 +46,8 @@ I want to use different approaches to recommend books and I will create differen
 
   <img width="100%" alt="image" src="https://github.com/user-attachments/assets/c3843bcf-c420-4544-8e02-1979d9b52e4b" />
 
-- **V3** *(WIP)* — ChromaDB (vector store) + HuggingFace Inference API embeddings (removes model in RAM!). Replaces the local `sentence-transformers` model and `.npy` cache with a persistent ChromaDB collection. I'll use `BAAI/bge-small-en-v1.5` model as an example. With this approach, book_vectors are indexed once via HuggingFace Inference API.
+- **V3** — ChromaDB + HuggingFace Inference API embeddings (fixes the RAM problem in V2!). Embeddings are being generated with the HuggingFace Inference API and stored in a ChromaDB collection on disk. Using the `BAAI/bge-small-en-v1.5` model. Book_vectors are indexed only once.
 
-- **V4** *(next)* — LLM response generation and finish the chatbot in Streamlit.
+- **V4** *(WIP)* — LLM response generation and finish the chatbot in Streamlit.
 
 - **V5** *(next)* — RAG pipeline evaluation (RAGAS framework maybe)
