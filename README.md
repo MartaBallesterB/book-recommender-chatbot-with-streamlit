@@ -42,7 +42,7 @@ I want to use different approaches to recommend books and I will create differen
 
     <img width="100%" alt="image" src="https://github.com/user-attachments/assets/55c9f711-d117-4ad5-a370-57444470e7ba" />
 
-- **V2** — Using `sentence-transformers`. Models encode semantic meaning into a 384 dimensional vector, so similar concepts rank together even without exact word matches (example: *"wizards"* finds books about *"magic"*). `book_vector` is cached to disk once, to avoid recomputing on every startup. Model I used to test: `all-MiniLM-L6-v2`. Problems for this approach: sentence-transformers loads the model every time streamlit runs (around 90MB with *one* model). :_(
+- **V2** — Using `sentence-transformers`. Models encode semantic meaning into a 384 dimensional vector, so similar concepts rank together even without exact word matches (example: *"wizards"* finds books about *"magic"*). `book_vector` is cached to disk once, to avoid recomputing on every startup. Models I used to test the recommender: `sentence-transformers/all-MiniLM-L6-v2` and `BAAI/bge-small-en-v1.5`. I created a notebook to compare them and choose the best of both, so I will use it in V3. Problems for this approach: sentence-transformers loads the model every time streamlit runs (around 90MB with *one* model). :_(
 
   <img width="100%" alt="image" src="https://github.com/user-attachments/assets/c3843bcf-c420-4544-8e02-1979d9b52e4b" />
 
