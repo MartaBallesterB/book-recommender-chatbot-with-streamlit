@@ -10,3 +10,6 @@ venv/
 
 # Data files
 data/
+
+# Credentials
+.env

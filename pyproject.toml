@@ -16,4 +16,7 @@ dependencies = [
     "streamlit>=1.55.0",
     "torchvision>=0.26.0",
     "wordcloud>=1.9.6",
+    "chromadb>=1.5.7",
+    "huggingface-hub>=1.9.2",
+    "python-dotenv>=1.2.2",
 ]
