@@ -44,7 +44,7 @@ I want to use different approaches to recommend books and I will create differen
 
 - **V2** — Using `sentence-transformers`. Models encode semantic meaning into a 384 dimensional vector, so similar concepts rank together even without exact word matches (example: *"wizards"* finds books about *"magic"*). `book_vector` is cached to disk once, to avoid recomputing on every startup. Models I used to test the recommender: `sentence-transformers/all-MiniLM-L6-v2` and `BAAI/bge-small-en-v1.5`. I created a notebook to compare them and choose the best of both, so I will use it in V3. Problems for this approach: sentence-transformers loads the model every time streamlit runs (around 90MB with *one* model). :_(
 
-  <img width="100%" alt="image" src="https://github.com/user-attachments/assets/c3843bcf-c420-4544-8e02-1979d9b52e4b" />
+  <img width="100%" alt="image" src="https://github.com/user-attachments/assets/b1738139-b84c-4870-a825-97757ede4a15" />
 
 - **V3** — ChromaDB + HuggingFace Inference API embeddings (fixes the RAM problem in V2!). Embeddings are being generated with the HuggingFace Inference API and stored in a ChromaDB collection on disk. Using the `BAAI/bge-small-en-v1.5` model. Book_vectors are indexed only once.
 
