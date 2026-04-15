@@ -44,12 +44,14 @@ I want to use different approaches to recommend books and I will create differen
 
 - **V2** — Using `sentence-transformers`. Models encode semantic meaning into a 384 dimensional vector, so similar concepts rank together even without exact word matches (example: *"wizards"* finds books about *"magic"*). `book_vector` is cached to disk once, to avoid recomputing on every startup. Models I used to test the recommender: `sentence-transformers/all-MiniLM-L6-v2` and `BAAI/bge-small-en-v1.5`. I created a notebook to compare them and choose the best of both, so I will use it in V3. Problems for this approach: sentence-transformers loads the model every time streamlit runs (around 90MB with *one* model). :_(
 
-  <img width="100%" alt="image" src="https://github.com/user-attachments/assets/b1738139-b84c-4870-a825-97757ede4a15" />
+  <img width="100%" alt="image" src="https://github.com/user-attachments/assets/6f3b427c-ef2e-45e6-8212-8b1b4ca1bef9" />
 
 - **V3** — ChromaDB + HuggingFace Inference API embeddings (fixes the RAM problem in V2!). Embeddings are being generated with the HuggingFace Inference API and stored in a ChromaDB collection on disk. Using the `BAAI/bge-small-en-v1.5` model. Book_vectors are indexed only once.
 
-    <img width="100%" alt="image" src="https://github.com/user-attachments/assets/8bdf61fd-499f-4364-9a80-9cc8d9f5b64f" />
+    <img width="100%" alt="image" src="https://github.com/user-attachments/assets/00ede1de-7fc7-4cf8-831f-c51ff6a99f10" />
 
-- **V4** *(WIP)* — LLM response generation and finish the chatbot in Streamlit.
+- **V4** *(WIP)* — LLM response generation (huggingface inference API)= finish RAG + finish the chatbot in Streamlit.
+
+    <img width="100%" alt="image" src="https://github.com/user-attachments/assets/c58beb6e-b62f-4baa-ac42-be3a1f2eef88" />
 
 - **V5** *(next)* — RAG pipeline evaluation (RAGAS framework maybe)
