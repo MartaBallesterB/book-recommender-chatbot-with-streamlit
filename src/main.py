@@ -8,6 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from src.embeddings import BookEmbedder
 from src.chroma import BookChromaStore
+from src.generator import BookResponseGenerator
 
 def json_dict_to_str(raw):
     """ Function to parse a JSON dict to returns its values as a comma-separated string."""
@@ -42,7 +43,6 @@ def load_books_dataset() -> pd.DataFrame:
     return df
 
 def build_tfidf(books: pd.DataFrame):
-    """Builds and returns a fitted TF-IDF vectorizer and book vectors."""
     vectorizer = TfidfVectorizer(
         stop_words="english",
         ngram_range=(1, 2),
@@ -53,18 +53,16 @@ def build_tfidf(books: pd.DataFrame):
     book_vectors = vectorizer.fit_transform(books["combined"])
     return vectorizer, book_vectors
 
-
 def build_embeddings(books: pd.DataFrame, model_name: str = "all-MiniLM-L6-v2"):
-    """Builds and returns a BookEmbedder and book vectors (cached to disk per model)."""
+    """Builds and returns a BookEmbedder and book vectors (cached to disk per model)"""
     embedder = BookEmbedder(model_name)
     safe_name = model_name.replace("/", "_")
     cache_path = f"data/book_vectors_{safe_name}.npy"
     book_vectors = embedder.encode_books(books["combined"].tolist(), cache_path=cache_path)
     return embedder, book_vectors
 
-
 def recommend_tfidf(query: str, top_N: int, books: pd.DataFrame, vectorizer, book_vectors, min_score=0.05) -> pd.DataFrame:
-    """Returns top N book recommendations using TF-IDF cosine similarity."""
+    """Returns top_N book recommendations using TF-IDF cosine similarity."""
     query_vec = vectorizer.transform([preprocess(query)])
     scores = cosine_similarity(query_vec, book_vectors).flatten()
     top_indices = scores.argsort()[-top_N:][::-1]
@@ -82,13 +80,17 @@ def recommend_embeddings(query: str, top_N: int, books: pd.DataFrame, embedder: 
     result["score"] = [round(s, 3) for s in scores]
     return result
 
-
 def build_chroma(books: pd.DataFrame, hf_token: str) -> BookChromaStore:
     store = BookChromaStore(hf_token=hf_token)
     if not store.is_indexed():
         store.index_books(books)
     return store
 
+def build_generator(hf_token: str) -> BookResponseGenerator:
+    return BookResponseGenerator(hf_token=hf_token)
+
+def generate_response(query: str, books: pd.DataFrame, generator: BookResponseGenerator, llm_history: list[dict] = None) -> str:
+    return generator.generate(query, books, llm_history=llm_history)
 
 def recommend_chroma(query: str, top_N: int, store: BookChromaStore) -> pd.DataFrame:
     results = store.query(query, n=top_N)
