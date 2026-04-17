@@ -50,7 +50,7 @@ I want to use different approaches to recommend books and I will create differen
 
     <img width="100%" alt="image" src="https://github.com/user-attachments/assets/00ede1de-7fc7-4cf8-831f-c51ff6a99f10" />
 
-- **V4** *(WIP)* — LLM response generation (huggingface inference API)= finish RAG + finish the chatbot in Streamlit.
+- **V4** *(WIP)* — LLM response generation (huggingface inference API)= finish RAG + finish the chatbot in Streamlit. Uses [`deepseek-ai/DeepSeek-V3.2`](https://huggingface.co/deepseek-ai/DeepSeek-V3.2) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) via Novita inference provider.
 
     <img width="100%" alt="image" src="https://github.com/user-attachments/assets/c58beb6e-b62f-4baa-ac42-be3a1f2eef88" />
 
