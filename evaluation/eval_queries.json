@@ -1,0 +1,180 @@
+{
+  "version": "1.0",
+  "description": "Evaluation query set for V5. 8 topic pairs (keyword + natural_language) to expose strengths/weaknesses of each V. Keyword queries: V1-TF-IDF; natural language and semantic queries: V3-V4.",
+  "queries": [
+    {
+      "id": "q01",
+      "query": "dystopia totalitarian government surveillance control",
+      "type": "keyword",
+      "relevant_titles": [
+        "Nineteen Eighty-Four",
+        "Animal Farm",
+        "Brave New World",
+        "The Iron Heel",
+        "Kazohinia"
+      ]
+    },
+    {
+      "id": "q02",
+      "query": "a society where an authoritarian government monitors and controls its citizens",
+      "type": "natural_language",
+      "relevant_titles": [
+        "Nineteen Eighty-Four",
+        "Animal Farm",
+        "Brave New World",
+        "The Iron Heel",
+        "Kazohinia"
+      ]
+    },
+    {
+      "id": "q03",
+      "query": "magic school young wizard powers coming of age",
+      "type": "keyword",
+      "relevant_titles": [
+        "Harry Potter and the Philosopher's Stone",
+        "Harry Potter and the Chamber of Secrets",
+        "Harry Potter and the Prisoner of Azkaban"
+      ]
+    },
+    {
+      "id": "q04",
+      "query": "a young person who discovers they have magical powers and attends a school for wizards",
+      "type": "natural_language",
+      "relevant_titles": [
+        "Harry Potter and the Philosopher's Stone",
+        "Harry Potter and the Chamber of Secrets",
+        "Harry Potter and the Prisoner of Azkaban"
+      ]
+    },
+    {
+      "id": "q05",
+      "query": "regency romance England social class marriage 19th century",
+      "type": "keyword",
+      "relevant_titles": [
+        "Pride and Prejudice",
+        "Sense and Sensibility",
+        "Jane Eyre",
+        "Persuasion"
+      ]
+    },
+    {
+      "id": "q06",
+      "query": "a romantic story set in 19th century England dealing with social class and marriage",
+      "type": "natural_language",
+      "relevant_titles": [
+        "Pride and Prejudice",
+        "Sense and Sensibility",
+        "Jane Eyre",
+        "Persuasion"
+      ]
+    },
+    {
+      "id": "q07",
+      "query": "horror psychological haunted isolation madness",
+      "type": "keyword",
+      "relevant_titles": [
+        "The Shining",
+        "The Haunting",
+        "Guilty Pleasures"
+      ]
+    },
+    {
+      "id": "q08",
+      "query": "a terrifying story where a character becomes isolated and slowly loses their sanity",
+      "type": "natural_language",
+      "relevant_titles": [
+        "The Shining",
+        "The Haunting",
+        "Guilty Pleasures"
+      ]
+    },
+    {
+      "id": "q09",
+      "query": "fantasy adventure quest fellowship journey",
+      "type": "keyword",
+      "relevant_titles": [
+        "The Hobbit",
+        "The Lord of the Rings",
+        "Dragoncharm",
+        "Dragons of Despair",
+        "Dragon Venom"
+      ]
+    },
+    {
+      "id": "q10",
+      "query": "an epic fantasy adventure where a group of unlikely heroes go on a dangerous quest",
+      "type": "natural_language",
+      "relevant_titles": [
+        "The Hobbit",
+        "The Lord of the Rings",
+        "Dragoncharm",
+        "Dragons of Despair",
+        "Dragon Venom"
+      ]
+    },
+    {
+      "id": "q11",
+      "query": "mystery detective crime murder investigation",
+      "type": "keyword",
+      "relevant_titles": [
+        "The Hollow Man",
+        "The Poisoned Chocolates Case",
+        "Agatha Raisin and the Quiche of Death",
+        "Drop to His Death",
+        "The Broken Anchor",
+        "King Solomon's Carpet"
+      ]
+    },
+    {
+      "id": "q12",
+      "query": "a suspenseful mystery where a detective investigates a series of murders",
+      "type": "natural_language",
+      "relevant_titles": [
+        "The Hollow Man",
+        "The Poisoned Chocolates Case",
+        "Agatha Raisin and the Quiche of Death",
+        "Drop to His Death",
+        "The Broken Anchor",
+        "King Solomon's Carpet"
+      ]
+    },
+    {
+      "id": "q13",
+      "query": "philosophical fable childhood imagination life meaning",
+      "type": "keyword",
+      "relevant_titles": [
+        "The Little Prince",
+        "Alice's Adventures in Wonderland"
+      ]
+    },
+    {
+      "id": "q14",
+      "query": "a short philosophical story seen through a child's eyes that reflects on what truly matters in life",
+      "type": "natural_language",
+      "relevant_titles": [
+        "The Little Prince",
+        "Alice's Adventures in Wonderland"
+      ]
+    },
+    {
+      "id": "q15",
+      "query": "epic fantasy complex magic system detailed world building",
+      "type": "keyword",
+      "relevant_titles": [
+        "Elantris",
+        "Mistborn: The Final Empire",
+        "The Way of Kings"
+      ]
+    },
+    {
+      "id": "q16",
+      "query": "a fantasy world with a unique and intricately designed magic system and rich world building",
+      "type": "natural_language",
+      "relevant_titles": [
+        "Elantris",
+        "Mistborn: The Final Empire",
+        "The Way of Kings"
+      ]
+    }
+  ]
+}
