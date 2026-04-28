@@ -17,11 +17,22 @@ def json_dict_to_str(raw):
     except Exception:
         return "" # empty string for nan's and invalid formats
 
+typical_filler_words_for_books = {
+    "book", "books", "novel", "novels", "story", "stories", "tale", "tales",
+    "read", "reading", "looking", "find", "want",
+    "recommend", "recommendation", "something", "give", "show", "suggest",
+}
+
 def preprocess(text: str) -> str:
     text = text.lower()
     text = re.sub(r"[^a-z0-9\s]", " ", text)  # elimina puntuación
     text = re.sub(r"\s+", " ", text).strip()
     return text
+
+def preprocess_query(text: str) -> str:
+    text = preprocess(text)
+    words = [w for w in text.split() if w not in typical_filler_words_for_books]
+    return " ".join(words)
 
 def load_books_dataset() -> pd.DataFrame:
     path = kagglehub.dataset_download("ymaricar/cmu-book-summary-dataset")
@@ -63,7 +74,7 @@ def build_embeddings(books: pd.DataFrame, model_name: str = "all-MiniLM-L6-v2"):
 
 def recommend_tfidf(query: str, top_N: int, books: pd.DataFrame, vectorizer, book_vectors, min_score=0.05) -> pd.DataFrame:
     """Returns top_N book recommendations using TF-IDF cosine similarity."""
-    query_vec = vectorizer.transform([preprocess(query)])
+    query_vec = vectorizer.transform([preprocess_query(query)])
     scores = cosine_similarity(query_vec, book_vectors).flatten()
     top_indices = scores.argsort()[-top_N:][::-1]
     top_indices = [i for i in top_indices if scores[i] >= min_score]  # filtro
