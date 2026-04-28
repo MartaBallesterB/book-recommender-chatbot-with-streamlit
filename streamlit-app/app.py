@@ -45,6 +45,8 @@ if "messages" not in st.session_state:
         {"role": "assistant", "content": "Hello! Let me help you find your next great read. Just tell me what kind of story are you looking for."}
     ]
 
+MAX_LLM_HISTORY_TURNS = 10
+
 # only for chromadb + LLM mode
 if "llm_messages" not in st.session_state:
     st.session_state.llm_messages = []
@@ -83,6 +85,9 @@ if query := st.chat_input("What kind of story are you looking for?"):
 
                 st.session_state.llm_messages.append({"role": "user", "content": query})
                 st.session_state.llm_messages.append({"role": "assistant", "content": llm_response})
+                max_msgs = MAX_LLM_HISTORY_TURNS * 2
+                if len(st.session_state.llm_messages) > max_msgs:
+                    st.session_state.llm_messages = st.session_state.llm_messages[-max_msgs:]
 
                 st.session_state.messages.append({"role": "assistant", "content": llm_response})
                 st.write(llm_response)
