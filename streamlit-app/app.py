@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import streamlit as st
-from src.main import load_books_dataset, build_tfidf, build_embeddings, build_chroma, build_generator, recommend_tfidf, recommend_embeddings, recommend_chroma, generate_response
+from src.recommender import load_books_dataset, build_tfidf, build_embeddings, build_chroma, build_generator, recommend_embeddings, recommend_chroma, generate_response
 
 from dotenv import load_dotenv
 load_dotenv() # loads HuggingFace token from .env
@@ -16,8 +16,7 @@ def get_books():
 @st.cache_resource
 def get_tfidf_setup():
     books = get_books()
-    vectorizer, book_vectors = build_tfidf(books)
-    return vectorizer, book_vectors
+    return build_tfidf(books)
 
 @st.cache_resource
 def get_embeddings_setup():
@@ -69,8 +68,8 @@ if query := st.chat_input("What kind of story are you looking for?"):
         results = recommend_chroma(query, top_N, store)
     else:
         books = get_books()
-        vectorizer, book_vectors = get_tfidf_setup()
-        results = recommend_tfidf(query, top_N, books, vectorizer, book_vectors)
+        tfidf = get_tfidf_setup()
+        results = tfidf.recommend(query, top_N, books)
 
     if results.empty:
         response = "I couldn't find any books matching your query. Try different keywords please!"
