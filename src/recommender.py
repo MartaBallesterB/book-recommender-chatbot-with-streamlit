@@ -55,7 +55,7 @@ def recommend_embeddings(query, top_n, books, embedder, book_vectors):
     return result
 
 # V3: ChromaDB vector store
-def build_chroma(books, hf_token):
+def build_chroma(books, hf_token=None):
     store = BookChromaStore(hf_token=hf_token)
     if not store.is_indexed():
         store.index_books(books)
